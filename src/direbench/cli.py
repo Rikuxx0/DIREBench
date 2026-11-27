@@ -194,6 +194,7 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("preflight")
     sub.add_parser("deploy")
+    sub.add_parser("down", help="remove benchmark workloads while keeping the cluster and results")
     sub.add_parser("report")
     sc = sub.add_parser("scenario")
     sc.add_argument("action", choices=("list", "validate"))
@@ -221,6 +222,10 @@ def main(argv=None):
             return preflight()
         if args.command == "deploy":
             runner.deploy()
+            return 0
+        if args.command == "down":
+            kube.down_namespace()
+            print("ベンチマーク用の名前空間を削除しました。クラスタとローカルの結果は残しています。")
             return 0
         if args.command == "report":
             return report()

@@ -55,6 +55,12 @@ def reset_namespace():
             raise KubeError(f"Residual {kind} after namespace reset")
 
 
+def down_namespace():
+    """Remove only the benchmark namespace; keep the dedicated cluster and local results."""
+    verify_context()
+    command(["delete", "namespace", NAMESPACE, "--ignore-not-found=true", "--wait=true"], namespace=False, timeout=120)
+
+
 def ready(deployment, timeout=120):
     command(["rollout", "status", f"deployment/{deployment}", f"--timeout={timeout}s"], timeout=timeout + 10)
 

@@ -33,6 +33,8 @@ direbench scenario list
 
 `all` は15シナリオを B0/B1/B2/B3/全拒否の5条件で実行し、さらに S4 と S5 の B3 アブレーション6試行を実行する（計81試行）。終了時に `results/summary.csv`、`results/paired_metrics.json`、`research_report.md` を生成する。セットアップ、クラスタ起動、クラスタ削除はこのコマンドに含めない。
 
+実験後にベンチマークの業務サービスだけを停止・削除する場合は `./.venv/bin/direbench down` を実行する。専用の `direbench` 名前空間を削除し、クラスタとローカルの結果は残す。クラスタ自体も削除する場合は `make cluster-down` を使う。
+
 各試行は namespace を削除・再作成し、結果を `results/<trial_id>/` に JSON/JSONL/CSV として保存する。失敗した試行があっても81試行とレポート生成を続け、最後に非ゼロの終了コードを返す。現在 `S1-independent` は隔離後のプローブが測定不能になる場合がある。
 
 個別の原因調査には `run`、カテゴリ内の B0 対照には `reproduce`、一部の baseline 比較には `evaluate` を使える。全件実行ではこれらを個別に入力する必要はない。`make test` はクラスタを使わないコード検証で、実測の代替にはならない。

@@ -21,6 +21,12 @@ class Boundaries(unittest.TestCase):
             self.assertEqual(args[:4], ["kubectl", "--context", "k3d-direbench", "--namespace"])
             self.assertEqual(args[4], "direbench")
 
+    def test_down_removes_only_benchmark_namespace(self):
+        with patch("direbench.kube.verify_context") as verify, patch("direbench.kube.command") as command:
+            kube.down_namespace()
+            verify.assert_called_once_with()
+            command.assert_called_once_with(["delete", "namespace", "direbench", "--ignore-not-found=true", "--wait=true"], namespace=False, timeout=120)
+
     def test_b2_detects_last_endpoint_but_not_redundant_endpoint(self):
         one = supervisor.decide("B2", "isolate-backend-a", state(1))
         two = supervisor.decide("B2", "isolate-backend-a", state(2))
